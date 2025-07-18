@@ -125,6 +125,12 @@ dist
 # Stores VSCode versions used for testing VSCode extensions
 .vscode-test
 
+#docker
+docker-compose.yml
+
+# linters que estan dentro de otras carpetas
+**/eslint.config.js
+
 # yarn v3
 .pnp.*
 .yarn/*
