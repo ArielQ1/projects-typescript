@@ -1,6 +1,7 @@
 import express, { Express } from 'express'
 import { BookModel } from './models/book'
 import { createBookRouter } from './routes/book'
+import { corsMiddleware } from './middlewares/cors'
 
 interface CreateAppOptions {
   bookModel: typeof BookModel
@@ -10,6 +11,7 @@ export const createApp = ({ bookModel }: CreateAppOptions): Express => {
   const app = express()
   app.use(express.json())
   app.disable('x-powered-by')
+  app.use(corsMiddleware())
 
   app.use('/api/books', createBookRouter({ bookModel }))
 
