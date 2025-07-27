@@ -2,6 +2,8 @@ import express, { Express } from 'express'
 import { BookModel } from './models/book'
 import { createBookRouter } from './routes/book'
 import { corsMiddleware } from './middlewares/cors'
+import swaggerUi from 'swagger-ui-express'
+import { swaggerDocument } from './utils/swagger'
 
 interface CreateAppOptions {
   bookModel: typeof BookModel
@@ -14,6 +16,7 @@ export const createApp = ({ bookModel }: CreateAppOptions): Express => {
   app.use(corsMiddleware())
 
   app.use('/api/books', createBookRouter({ bookModel }))
+  app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
 
   const PORT = process.env.PORT || 3000
 

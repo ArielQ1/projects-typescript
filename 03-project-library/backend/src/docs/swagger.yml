@@ -1,0 +1,198 @@
+openapi: 3.0.0
+info:
+  title: Books API
+  description: API for managing books in a library
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000
+    description: Local server
+
+paths:
+  /api/books:
+    get:
+      summary: Retrieve a list of books
+      description: Fetches all books available in the library
+      tags:
+        - Books
+      responses:
+        '200':
+          description: A list of books
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Book'
+        '500':
+          description: Internal server error
+
+    post:
+      summary: Add a new book
+      description: Creates a new book entry in the library
+      tags:
+        - Books
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BookCreate'
+      responses:
+        '201':
+          description: Book created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Book'
+        '400':
+          description: Bad request, invalid book data
+        '500':
+          description: Internal server error
+
+  /api/books/{id}:
+    get:
+      summary: Get book by ID
+      description: Retrieves a specific book by its ID
+      tags:
+        - Books
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Book ID
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Book found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Book'
+        '404':
+          description: Book not found
+        '500':
+          description: Internal server error
+
+    put:
+      summary: Update a book
+      description: Updates an existing book by its ID
+      tags:
+        - Books
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Book ID
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BookUpdate'
+      responses:
+        '200':
+          description: Book updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Book'
+        '404':
+          description: Book not found
+        '400':
+          description: Bad request, invalid book data
+        '500':
+          description: Internal server error
+
+    delete:
+      summary: Delete a book
+      description: Deletes a book by its ID
+      tags:
+        - Books
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Book ID
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Book deleted successfully
+        '404':
+          description: Book not found
+        '500':
+          description: Internal server error
+
+components:
+  schemas:
+    Book:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier for the book
+        title:
+          type: string
+          description: Title of the book
+        author:
+          type: string
+          description: Author of the book
+        edition:
+          type: string
+          description: Edition of the book
+        availability:
+          type: boolean
+          description: Availability status of the book
+      required:
+        - id
+        - title
+        - author
+        - availability
+
+    BookCreate:
+      type: object
+      properties:
+        title:
+          type: string
+          description: Title of the book
+          minLength: 1
+        author:
+          type: string
+          description: Author of the book
+          minLength: 1
+        edition:
+          type: string
+          description: Edition of the book
+        availability:
+          type: boolean
+          description: Availability status of the book
+          default: true
+      required:
+        - title
+        - author
+
+    BookUpdate:
+      type: object
+      properties:
+        title:
+          type: string
+          description: Title of the book
+          minLength: 1
+        author:
+          type: string
+          description: Author of the book
+          minLength: 1
+        edition:
+          type: string
+          description: Edition of the book
+        availability:
+          type: boolean
+          description: Availability status of the book
+  
